@@ -28,6 +28,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void WeaponShoot();
 
+	// Getting a reference for the player: first make a protected variable of type Character
+	ACharacter* Player; // it'll be initialized in the BeginPlay
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

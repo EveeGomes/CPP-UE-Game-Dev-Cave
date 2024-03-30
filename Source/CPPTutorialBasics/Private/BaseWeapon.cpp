@@ -2,6 +2,7 @@
 
 
 #include "BaseWeapon.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
@@ -17,7 +18,7 @@ ABaseWeapon::ABaseWeapon()
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Player = UGameplayStatics::GetPlayerCharacter(this, 0);
 }
 
 void ABaseWeapon::WeaponShoot()
