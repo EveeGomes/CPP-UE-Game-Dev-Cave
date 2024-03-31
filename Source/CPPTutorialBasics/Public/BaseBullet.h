@@ -19,6 +19,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly)
+	class UNiagaraComponent* BulletFX;
+
+	UPROPERTY(EditDefaultsOnly)
+	class USphereComponent* CollisionSphere;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
