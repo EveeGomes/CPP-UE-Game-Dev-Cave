@@ -3,6 +3,7 @@
 #include "BaseMagicCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "BaseWeapon.h"
 
 
 // Sets default values
@@ -34,9 +35,11 @@ void ABaseMagicCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//// Print a debug message indicating that BeginPlay is called
-	//UE_LOG(LogTemp, Warning, TEXT("BaseMagicCharacter BeginPlay called"));
-	
+	ABaseWeapon* WeaponPtr = Cast<ABaseWeapon>(Weapon->GetChildActor());
+	if (WeaponPtr)
+	{
+		WeaponPtr->SetPlayerPointer(this);
+	}
 }
 
 void ABaseMagicCharacter::Shoot()

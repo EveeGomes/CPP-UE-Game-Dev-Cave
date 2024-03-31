@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	ABaseWeapon();
 
+	// To be used in the BaseMagicCharacter to get the reference of the player
+	void SetPlayerPointer(ACharacter* PlayerPtr);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -28,8 +31,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void WeaponShoot();
 
-	// Getting a reference for the player: first make a protected variable of type Character
-	ACharacter* Player; // it'll be initialized in the BeginPlay
+	// Used to get a reference for the player
+	ACharacter* Player;
+
+
 
 public:	
 	// Called every frame
