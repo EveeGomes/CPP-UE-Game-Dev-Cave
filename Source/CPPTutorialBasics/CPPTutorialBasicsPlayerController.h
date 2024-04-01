@@ -54,6 +54,15 @@ protected:
 	float TimeBetweenFires = 0.2f;
 
 	void SetCanFire(bool Value);
+
+	FRotator ShootRot;
+	FRotator MovementRot;
+
+	bool IsShooting;
+	void SetShootTrue();
+	void SetShootFalse();
+
+	virtual void Tick(float DeltaTime) override;
 };
 
 

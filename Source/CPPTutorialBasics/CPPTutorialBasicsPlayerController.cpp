@@ -44,6 +44,8 @@ void ACPPTutorialBasicsPlayerController::SetupInputComponent()
 
 		// Shooting Bidings
 		EnhancedInputComponent->BindAction(FireInput, ETriggerEvent::Triggered, this, &ACPPTutorialBasicsPlayerController::FireBullet);
+		EnhancedInputComponent->BindAction(FireInput, ETriggerEvent::Started, this, &ACPPTutorialBasicsPlayerController::SetShootTrue);
+		EnhancedInputComponent->BindAction(FireInput, ETriggerEvent::Completed, this, &ACPPTutorialBasicsPlayerController::SetShootFalse);
 	}
 }
 
@@ -52,6 +54,7 @@ void ACPPTutorialBasicsPlayerController::Move(const FInputActionValue& Value)
 {
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	FVector InputVector = FVector(MovementVector, 0);
+	MovementRot = InputVector.Rotation();
 
 	// Get a pointer to the pawn that you're possessing
 	APawn* pawn = GetPawn();
@@ -61,15 +64,22 @@ void ACPPTutorialBasicsPlayerController::Move(const FInputActionValue& Value)
 void ACPPTutorialBasicsPlayerController::FireBullet(const FInputActionValue& Value)
 {
 	// Check if the player is valid (to avoid the engine to crash)
-	if (PlayerCharacter && CanFire)
+	if (PlayerCharacter)
 	{
-		PlayerCharacter->ShootBullet();
-		CanFire = false;
+		// Set character's rotation
+		FVector Direction = FVector(Value.Get<FVector2D>(), 0);
+		ShootRot = Direction.Rotation();
 
-		// Set a timer
-		FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &ACPPTutorialBasicsPlayerController::SetCanFire, true);
-		FTimerHandle TimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, Delegate, TimeBetweenFires, false);
+		if (CanFire)
+		{
+			PlayerCharacter->ShootBullet();
+			CanFire = false;
+
+			// Set a timer
+			FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &ACPPTutorialBasicsPlayerController::SetCanFire, true);
+			FTimerHandle TimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, Delegate, TimeBetweenFires, false);
+		}
 	}
 }
 
@@ -77,5 +87,28 @@ void ACPPTutorialBasicsPlayerController::SetCanFire(bool Value)
 {
 	//CanFire = true;
 	CanFire = Value;
+}
+
+void ACPPTutorialBasicsPlayerController::SetShootTrue()
+{
+	IsShooting = true;
+}
+
+void ACPPTutorialBasicsPlayerController::SetShootFalse()
+{
+	IsShooting = false;
+}
+
+void ACPPTutorialBasicsPlayerController::Tick(float DeltaTime)
+{
+	if (IsShooting)
+	{
+		PlayerCharacter->SetActorRotation(ShootRot);
+	}
+	else
+	{
+		PlayerCharacter->SetActorRotation(MovementRot);
+	}
+	
 }
 
