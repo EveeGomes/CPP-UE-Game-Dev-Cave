@@ -61,9 +61,21 @@ void ACPPTutorialBasicsPlayerController::Move(const FInputActionValue& Value)
 void ACPPTutorialBasicsPlayerController::FireBullet(const FInputActionValue& Value)
 {
 	// Check if the player is valid (to avoid the engine to crash)
-	if (PlayerCharacter)
+	if (PlayerCharacter && CanFire)
 	{
 		PlayerCharacter->ShootBullet();
+		CanFire = false;
+
+		// Set a timer
+		FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &ACPPTutorialBasicsPlayerController::SetCanFire, true);
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, Delegate, TimeBetweenFires, false);
 	}
+}
+
+void ACPPTutorialBasicsPlayerController::SetCanFire(bool Value)
+{
+	//CanFire = true;
+	CanFire = Value;
 }
 
