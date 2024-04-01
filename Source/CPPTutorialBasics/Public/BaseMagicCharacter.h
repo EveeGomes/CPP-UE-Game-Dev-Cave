@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BaseBullet.h"
+
 #include "BaseMagicCharacter.generated.h"
 
 UCLASS()
@@ -24,8 +26,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void Shoot();
-
 	UPROPERTY(EditAnywhere)
 	UChildActorComponent* Weapon;
 
@@ -36,6 +36,15 @@ protected:
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
+
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* SpawnLocation;
+
+	AActor* ShootBullet();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<ABaseBullet> BulletToSpawn;
+
 
 public:	
 	// Called every frame
