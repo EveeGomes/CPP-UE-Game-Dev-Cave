@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "BaseBullet.h"
 
 #include "BaseMagicCharacter.generated.h"
 
@@ -40,10 +39,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* SpawnLocation;
 
-	AActor* ShootBullet();
-
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ABaseBullet> BulletToSpawn;
+	TSubclassOf<class ABaseBullet> BulletToSpawn;
 
 
 public:	
@@ -53,5 +50,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+	AActor* ShootBullet();
 };

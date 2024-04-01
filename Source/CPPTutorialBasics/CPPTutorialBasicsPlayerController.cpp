@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "BaseMagicCharacter.h"
 
 ACPPTutorialBasicsPlayerController::ACPPTutorialBasicsPlayerController()
 {}
@@ -17,6 +18,9 @@ void ACPPTutorialBasicsPlayerController::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	// Get the spawned character, cast it to a BaseMagicCharacter and assign it to PlayerCharacter
+	PlayerCharacter = Cast<ABaseMagicCharacter>(GetPawn());
 
 	//Add Input Mapping Context
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
@@ -35,9 +39,11 @@ void ACPPTutorialBasicsPlayerController::SetupInputComponent()
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
-
+		// Movement Bidings
 		EnhancedInputComponent->BindAction(MovementInput, ETriggerEvent::Triggered, this, &ACPPTutorialBasicsPlayerController::Move);
 
+		// Shooting Bidings
+		EnhancedInputComponent->BindAction(FireInput, ETriggerEvent::Triggered, this, &ACPPTutorialBasicsPlayerController::FireBullet);
 	}
 }
 
@@ -50,33 +56,14 @@ void ACPPTutorialBasicsPlayerController::Move(const FInputActionValue& Value)
 	// Get a pointer to the pawn that you're possessing
 	APawn* pawn = GetPawn();
 	pawn->AddMovementInput(InputVector, speed, false);
+}
 
-	// the following won't work!
-	//GetPawn()->AddMovementInput(InputVector, speed, false);
-
-
-
-	/**
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	// https://forums.unrealengine.com/t/how-to-set-up-enhanced-input-for-aplayercontroller-in-c/1220649/22 // 
-
-	//// input is a Vector2D
-	//FVector2D MovementVector = Value.Get<FVector2D>();
-
-	//// find out which way is forward
-	//const FRotator Rotation = GetControlRotation();
-	//const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	//// get forward vector
-	//const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-	//// get right vector 
-	//const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-	//// add movement 
-	//APawn* pawn = GetPawn();
-	//pawn->AddMovementInput(ForwardDirection, MovementVector.Y);
-	//pawn->AddMovementInput(RightDirection, MovementVector.X);
-	*/
+void ACPPTutorialBasicsPlayerController::FireBullet(const FInputActionValue& Value)
+{
+	// Check if the player is valid (to avoid the engine to crash)
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->ShootBullet();
+	}
 }
 
