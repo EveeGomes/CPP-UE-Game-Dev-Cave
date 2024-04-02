@@ -28,6 +28,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	class UProjectileMovementComponent* ProjectileMovement;
 
+	UFUNCTION()
+	void BeginOverLap(UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
+	virtual void BulletHit();
+
+	// This pointer can hold a type of emitter that we want to spawn in whenever we overlap with something
+	UPROPERTY(EditDefaultsOnly)
+	class UNiagaraSystem* ImpactParticles;
+
+	UPROPERTY(EditDefaultsOnly)
+	float BaseDamage;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageType> DamageType;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

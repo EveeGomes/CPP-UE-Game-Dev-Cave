@@ -5,6 +5,9 @@
 #include "Components/SphereComponent.h"
 #include "NiagaraComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -28,13 +31,29 @@ ABaseBullet::ABaseBullet()
 void ABaseBullet::BeginPlay()
 {
 	Super::BeginPlay();
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ABaseBullet::BeginOverLap);
 	
+}
+
+void ABaseBullet::BeginOverLap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactParticles, GetActorLocation());
+	BulletHit();
+
+	// ApplyDamage asks for a controller, so we put it in a variable:
+	AController* PlayerController = GetInstigator()->GetController();
+	UGameplayStatics::ApplyDamage(OtherActor, BaseDamage, PlayerController, this, DamageType);
+	Destroy();
+}
+
+void ABaseBullet::BulletHit()
+{
 }
 
 // Called every frame
 void ABaseBullet::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);	
 
 }
 
