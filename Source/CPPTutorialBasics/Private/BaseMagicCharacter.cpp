@@ -61,6 +61,16 @@ AActor* ABaseMagicCharacter::ShootBullet()
 	return SpawnedActor;
 }
 
+float ABaseMagicCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	HP -= DamageAmount;
+	if (HP <= 0)
+	{
+		Destroy();
+	}
+	return DamageAmount;
+}
+
 // Called every frame
 void ABaseMagicCharacter::Tick(float DeltaTime)
 {

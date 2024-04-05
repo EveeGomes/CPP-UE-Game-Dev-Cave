@@ -39,6 +39,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* SpawnLocation;
 
+	UPROPERTY(EditAnywhere)
+	float HP = 50;
+
+	virtual float TakeDamage
+	(
+		float DamageAmount,
+		struct FDamageEvent const& DamageEvent,
+		class AController* EventInstigator,
+		AActor* DamageCauser
+	) override;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABaseBullet> BulletToSpawn;
 

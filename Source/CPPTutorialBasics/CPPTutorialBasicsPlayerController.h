@@ -58,9 +58,14 @@ protected:
 	FRotator ShootRot;
 	FRotator MovementRot;
 
+
+	UPROPERTY(BlueprintReadOnly)
 	bool IsShooting;
 	void SetShootTrue();
 	void SetShootFalse();
+
+	UFUNCTION(BlueprintPure)
+	FVector CalculateMovementBlending();
 
 	virtual void Tick(float DeltaTime) override;
 };

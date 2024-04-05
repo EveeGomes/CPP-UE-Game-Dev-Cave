@@ -99,6 +99,22 @@ void ACPPTutorialBasicsPlayerController::SetShootFalse()
 	IsShooting = false;
 }
 
+FVector ACPPTutorialBasicsPlayerController::CalculateMovementBlending()
+{
+	FVector Movement = MovementRot.Vector();
+	FVector Shooting = ShootRot.Vector();
+
+	// x component
+	float RodProd = FVector::DotProduct(Movement, Shooting);
+	// y component
+	FVector BlendVector = Movement - Shooting * RodProd;
+
+	FVector OutputVector = FVector(RodProd, BlendVector.Length(), 0);
+
+
+	return OutputVector*100;
+}
+
 void ACPPTutorialBasicsPlayerController::Tick(float DeltaTime)
 {
 	if (IsShooting)
