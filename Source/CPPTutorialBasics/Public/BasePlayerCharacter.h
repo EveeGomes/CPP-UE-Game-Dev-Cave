@@ -14,4 +14,12 @@ class CPPTUTORIALBASICS_API ABasePlayerCharacter : public ABaseMagicCharacter
 {
 	GENERATED_BODY()
 	
+	// If I add the following, the player won't rotate when moving
+public:
+	//FRotator ShootRot;
+	//FRotator MovementRot;
+
+	//virtual void Tick(float DeltaTime) override;
+
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 };

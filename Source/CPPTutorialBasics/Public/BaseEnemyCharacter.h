@@ -14,4 +14,8 @@ class CPPTUTORIALBASICS_API ABaseEnemyCharacter : public ABaseMagicCharacter
 {
 	GENERATED_BODY()
 	
+public:
+
+	UPROPERTY(EditDefaultsOnly)
+	class UBehaviorTree* BTAsset;
 };

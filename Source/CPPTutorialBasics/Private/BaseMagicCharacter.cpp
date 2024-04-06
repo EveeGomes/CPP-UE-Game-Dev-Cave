@@ -89,21 +89,24 @@ AActor* ABaseMagicCharacter::ShootBullet(FVector Direction)
 		FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &ABaseMagicCharacter::SetCanFire, true);
 		FTimerHandle TimerHandle;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, Delegate, TimeBetweenFires, false);
+
+		// THIS SHOULD BE INSIDE THE IF STATEMENT!!!!!!! AND OUTSIDE THE IF STATEMENT RETURN NULLPTR!!!!! 
+		// IT SOLVED THE WAY THE BULLET/POWER WAS SHOT AND COLLIDING ALL THE TIME
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Instigator = this; // to keep track of who did the damage
+
+		// Actor pointer set to point to whatever actor is spawned in the world
+		AActor* SpawnedActor = GetWorld()->SpawnActor<ABaseBullet>(
+			BulletToSpawn,
+			SpawnLocation->GetComponentLocation(), 
+			GetActorRotation(), 
+			SpawnParams);
+
+		return SpawnedActor;
 	}
 	SetActorRotation(Direction.Rotation());
 
-
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Instigator = this; // to keep track of who did the damage
-
-	// Actor pointer set to point to whatever actor is spawned in the world
-	AActor* SpawnedActor = GetWorld()->SpawnActor<ABaseBullet>(
-		BulletToSpawn,
-		SpawnLocation->GetComponentLocation(), 
-		GetActorRotation(), 
-		SpawnParams);
-
-	return SpawnedActor;
+	return nullptr;
 }
 
 float ABaseMagicCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
