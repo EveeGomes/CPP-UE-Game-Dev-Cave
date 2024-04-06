@@ -53,6 +53,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABaseBullet> BulletToSpawn;
 
+	bool CanFire = true;
+
+	UPROPERTY(EditAnywhere)
+	float TimeBetweenFires = 0.2f;
+
+	UFUNCTION(BlueprintPure)
+	FVector CalculateMovementBlending();
+
+	void SetCanFire(bool Value);
 
 public:	
 	// Called every frame
@@ -61,5 +70,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	AActor* ShootBullet();
+	FRotator ShootRot;
+	FRotator MovementRot;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool IsShooting;
+
+	void SetShootTrue();
+	void SetShootFalse();
+
+	AActor* ShootBullet(FVector Direction);
 };

@@ -48,24 +48,24 @@ protected:
 
 	class ABaseMagicCharacter* PlayerCharacter;
 
-	bool CanFire = true;
+	//bool CanFire = true;
 
-	UPROPERTY(EditAnywhere)
-	float TimeBetweenFires = 0.2f;
+	//UPROPERTY(EditAnywhere)
+	//float TimeBetweenFires = 0.2f;
 
-	void SetCanFire(bool Value);
+	//void SetCanFire(bool Value);
 
-	FRotator ShootRot;
-	FRotator MovementRot;
+	//FRotator ShootRot;
+	//FRotator MovementRot;
 
 
-	UPROPERTY(BlueprintReadOnly)
-	bool IsShooting;
+	//UPROPERTY(BlueprintReadOnly)
+	//bool IsShooting;
 	void SetShootTrue();
 	void SetShootFalse();
 
-	UFUNCTION(BlueprintPure)
-	FVector CalculateMovementBlending();
+	//UFUNCTION(BlueprintPure)
+	//FVector CalculateMovementBlending(); // also change this in the animation BP
 
 	virtual void Tick(float DeltaTime) override;
 };

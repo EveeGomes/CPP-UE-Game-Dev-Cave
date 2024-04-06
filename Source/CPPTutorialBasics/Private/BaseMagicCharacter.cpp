@@ -46,8 +46,53 @@ void ABaseMagicCharacter::BeginPlay()
 	}
 }
 
-AActor* ABaseMagicCharacter::ShootBullet()
+FVector ABaseMagicCharacter::CalculateMovementBlending()
 {
+	FVector Movement = MovementRot.Vector();
+	FVector Shooting = ShootRot.Vector();
+
+	// x component
+	float RodProd = FVector::DotProduct(Movement, Shooting);
+	// y component
+	FVector BlendVector = Movement - Shooting * RodProd;
+
+	FVector OutputVector = FVector(RodProd, BlendVector.Length(), 0);
+
+
+	return OutputVector * 100;
+}
+
+void ABaseMagicCharacter::SetShootTrue()
+{
+	IsShooting = true;
+}
+
+void ABaseMagicCharacter::SetShootFalse()
+{
+	IsShooting = false;
+}
+
+void ABaseMagicCharacter::SetCanFire(bool Value)
+{
+	CanFire = Value;
+}
+
+AActor* ABaseMagicCharacter::ShootBullet(FVector Direction)
+{
+	ShootRot = Direction.Rotation();
+
+	if (CanFire)
+	{
+		CanFire = false;
+
+		// Set a timer
+		FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &ABaseMagicCharacter::SetCanFire, true);
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, Delegate, TimeBetweenFires, false);
+	}
+	SetActorRotation(Direction.Rotation());
+
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Instigator = this; // to keep track of who did the damage
 
@@ -75,6 +120,15 @@ float ABaseMagicCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Da
 void ABaseMagicCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (IsShooting)
+	{
+		SetActorRotation(ShootRot);
+	}
+	else
+	{
+		SetActorRotation(MovementRot);
+	}
 
 }
 

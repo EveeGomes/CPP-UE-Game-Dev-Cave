@@ -54,7 +54,16 @@ void ACPPTutorialBasicsPlayerController::Move(const FInputActionValue& Value)
 {
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	FVector InputVector = FVector(MovementVector, 0);
-	MovementRot = InputVector.Rotation();
+
+	// Have similar code to what we have in SetShootTrue/False methods in order to get a reference to MovementRot:
+
+	//ABaseMagicCharacter* Character = Cast<ABaseMagicCharacter>(GetPawn());
+	//Character = Cast<ABaseMagicCharacter>(GetPawn());/////// this is also already initialized in BeginPlay(), should it be initialized again?
+
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->MovementRot = InputVector.Rotation();
+	}
 
 	// Get a pointer to the pawn that you're possessing
 	APawn* pawn = GetPawn();
@@ -63,68 +72,33 @@ void ACPPTutorialBasicsPlayerController::Move(const FInputActionValue& Value)
 
 void ACPPTutorialBasicsPlayerController::FireBullet(const FInputActionValue& Value)
 {
-	// Check if the player is valid (to avoid the engine to crash)
-	if (PlayerCharacter)
-	{
-		// Set character's rotation
-		FVector Direction = FVector(Value.Get<FVector2D>(), 0);
-		ShootRot = Direction.Rotation();
-
-		if (CanFire)
-		{
-			PlayerCharacter->ShootBullet();
-			CanFire = false;
-
-			// Set a timer
-			FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &ACPPTutorialBasicsPlayerController::SetCanFire, true);
-			FTimerHandle TimerHandle;
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, Delegate, TimeBetweenFires, false);
-		}
-	}
-}
-
-void ACPPTutorialBasicsPlayerController::SetCanFire(bool Value)
-{
-	//CanFire = true;
-	CanFire = Value;
+	FVector Direction = FVector(Value.Get<FVector2D>(), 0);
+	PlayerCharacter->ShootBullet(Direction);
 }
 
 void ACPPTutorialBasicsPlayerController::SetShootTrue()
 {
-	IsShooting = true;
+	//ABaseMagicCharacter* Character = Cast<ABaseMagicCharacter>(GetPawn());
+	// Instead of creating a pointer, use the one that's a member of the this class!
+	//PlayerCharacter = Cast<ABaseMagicCharacter>(GetPawn());/////// this is also already initialized in BeginPlay(), should it be initialized again?
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->SetShootTrue();
+	}
 }
 
 void ACPPTutorialBasicsPlayerController::SetShootFalse()
 {
-	IsShooting = false;
+	//ABaseMagicCharacter* Character = Cast<ABaseMagicCharacter>(GetPawn());
+	//Character = Cast<ABaseMagicCharacter>(GetPawn());/////// this is also already initialized in BeginPlay(), should it be initialized again?
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->SetShootFalse();
+	}
 }
 
-FVector ACPPTutorialBasicsPlayerController::CalculateMovementBlending()
-{
-	FVector Movement = MovementRot.Vector();
-	FVector Shooting = ShootRot.Vector();
-
-	// x component
-	float RodProd = FVector::DotProduct(Movement, Shooting);
-	// y component
-	FVector BlendVector = Movement - Shooting * RodProd;
-
-	FVector OutputVector = FVector(RodProd, BlendVector.Length(), 0);
-
-
-	return OutputVector*100;
-}
 
 void ACPPTutorialBasicsPlayerController::Tick(float DeltaTime)
-{
-	if (IsShooting)
-	{
-		PlayerCharacter->SetActorRotation(ShootRot);
-	}
-	else
-	{
-		PlayerCharacter->SetActorRotation(MovementRot);
-	}
-	
+{	
 }
 
