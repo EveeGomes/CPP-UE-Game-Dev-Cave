@@ -1,0 +1,17 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "BehaviorTree/BTTaskNode.h"
+#include "BTT_EnemyBasicShoot.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class CPPTUTORIALBASICS_API UBTT_EnemyBasicShoot : public UBTTaskNode
+{
+	GENERATED_BODY()
+	
+};
